@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Our Community</title>
+  <style>
+    /* Reset & Base */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f1115; color: #e1e1e6; }
+    a { text-decoration: none; color: inherit; }
+    /* Navbar */
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: #1f2126;
+      justify-content: flex-start;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    .logo img {
+      height: 32px;           /* adjust as needed */
+      margin-right: 0.75rem;
+    }
+    .logo span {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    /* Hero Section */
+    .hero { text-align: center; padding: 4rem 2rem; }
+    .hero h1 { font-size: 2.75rem; line-height: 1.2; }
+    .hero h1 span { color: #007bff; }
+    .hero p { margin-top: 1rem; font-size: 1.125rem; color: #b0b0b8; }
+    /* Form Card */
+    .card-container { display: flex; justify-content: center; padding: 2rem; }
+    .card {
+      background: #1f2126;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.5);
+      width: 100%;
+      max-width: 400px;
+    }
+    .card h2 { font-size: 1.5rem; margin-bottom: 1rem; }
+    .card input[type="email"] {
+      width: 100%;
+      padding: .75rem;
+      margin-bottom: 1rem;
+      border: 1px solid #333;
+      border-radius: 6px;
+      background: #0f1115;
+      color: #e1e1e6;
+    }
+    .card input[type="email"]:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    .card button {
+      width: 100%;
+      padding: .75rem;
+      background: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .card button:hover { background: #0056b3; }
+    .card #result {
+      margin-top: 1rem;
+      font-size: 1rem;
+      word-break: break-word;
+    }
+    .card a { color: #007bff; }
+    .card a:hover { text-decoration: underline; }
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #606060;
+      font-size: .875rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar with logo + brand name on the left -->
+  <header class="navbar">
+    <div class="logo">
+      <img src="https://d1lrk9cp1c3gxw.cloudfront.net/static/landing/imgs/logo.png" alt="AlgoPath Logo">
+      <span>AlgoPath</span>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1><span>Secure</span> Community Access</h1>
+    <p>Enter your registered email to get an exclusive, one-time invite.</p>
+  </section>
+
+  <!-- Form Card -->
+  <div class="card-container">
+    <div class="card">
+      <h2>Get Your Discord Invite</h2>
+      <input type="email" id="email" placeholder="you@example.com" required>
+      <button id="getInvite">Get Invite</button>
+      <p id="result"></p>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    &copy; 2025 AlgoUniversity. All rights reserved.
+  </footer>
+
+  <script>
+    document.getElementById("getInvite").addEventListener("click", async () => {
+      const emailInput = document.getElementById("email");
+      const resultEl = document.getElementById("result");
+      const email = emailInput.value.trim();
+      resultEl.textContent = "";
+      if (!email) {
+        resultEl.textContent = "❌ Please enter your email.";
+        return;
+      }
+
+      const res = await fetch("/get-discord-invite", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        resultEl.innerHTML = `✅ <a href="${data.invite}" target="_blank">Click here to join the Discord</a>`;
+      } else {
+        resultEl.textContent = `❌ ${data.error}`;
+      }
+    });
+  </script>
+</body>
+</html>
